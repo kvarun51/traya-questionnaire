@@ -42,6 +42,7 @@ export default function SingleChoice({ question, onNext, onPrev }: Props) {
           onClick={() => {
             if (selectedValue) {
               setQuestionProgress(question.id, selectedValue);
+              localStorage.setItem('use_gender', selectedValue);
               if (onNext) onNext();
             }
           }}

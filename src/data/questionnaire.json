@@ -14,12 +14,24 @@
         "id": "phone_number",
         "component": "inputPhoneNumber",
         "group": "basic_information",
-        "next": "email",
+        "next": "age",
         "reply": "",
         "sub_text": "",
         "tag": "user",
         "text": "Phone Number",
         "hindi_text": "Phone Number",
+        "type": "text"
+    },
+    "age": {
+        "id": "age",
+        "component": "inputAge",
+        "group": "basic_information",
+        "next": "email",
+        "reply": "",
+        "sub_text": "",
+        "tag": "user",
+        "text": "Tell us your Age",
+        "hindi_text": "Age",
         "type": "text"
     },
     "email": {

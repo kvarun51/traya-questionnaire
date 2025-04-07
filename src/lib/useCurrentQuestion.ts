@@ -23,7 +23,7 @@ export function useCurrentQuestion() {
   const findNextQuestion = (questionId: string | null): Question | null => {
     if (!questionId) {
       const firstKey = keys[0];
-      return { ...(questionnaire as Record<string, Question>)[firstKey], first_question: true }; // ✅ added
+      return { ...(questionnaire as Record<string, Question>)[firstKey], first_question: true };
     }
 
     const currentIndex = keys.findIndex((key) => key === questionId);
@@ -43,7 +43,7 @@ export function useCurrentQuestion() {
 
       if (progress.length === 0) {
         const firstKey = keys[0];
-        question = { ...(questionnaire as Record<string, Question>)[firstKey], first_question: true }; // ✅ already present
+        question = { ...(questionnaire as Record<string, Question>)[firstKey], first_question: true };
       } else {
         const last = progress[progress.length - 1];
         question = (questionnaire as Record<string, Question>)[last.questionId];
@@ -84,10 +84,10 @@ export function useCurrentQuestion() {
       parsed.question_progress = progress;
       localStorage.setItem('traya_session', JSON.stringify(parsed));
 
-      const isFirst = previousItem.questionId === keys[0]; // ✅ added
+      const isFirst = previousItem.questionId === keys[0];
       const previous = (questionnaire as Record<string, Question>)[previousItem.questionId];
-      setCurrentQuestion({ ...previous, ...(isFirst && { first_question: true }) }); // ✅ modified
-      return { ...previous, ...(isFirst && { first_question: true }) }; // ✅ return updated
+      setCurrentQuestion({ ...previous, ...(isFirst && { first_question: true }) });
+      return { ...previous, ...(isFirst && { first_question: true }) };
     } catch (err) {
       console.error('Failed to get previous question', err);
       return null;

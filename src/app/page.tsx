@@ -5,7 +5,6 @@ import HomePageContent from "@/components/Home";
 export default function Home() {
   return (
     <div className={styles.page}>
-
       <HomePageContent />
     </div>
   );
