@@ -14,19 +14,19 @@ const Wrapper = styled.div`
 `;
 
 export default function QuestionnairePage() {
-  const currentQuestion = useCurrentQuestion();
-console.log(currentQuestion)
-  if (!currentQuestion) {
-    return (
-      <Wrapper>
-        <Spin size="large" />
-      </Wrapper>
-    );
-  }
+    const {currentQuestion, getNextQuestion} = useCurrentQuestion();
+    console.log(currentQuestion)
+    if (!currentQuestion) {
+        return (
+            <Wrapper>
+                <Spin size="large" />
+            </Wrapper>
+        );
+    }
 
-  return (
-    <Wrapper>
-      <Questionnaire question={currentQuestion} />
-    </Wrapper>
-  );
+    return (
+        <Wrapper>
+            <Questionnaire question={currentQuestion} getNextQuestion={getNextQuestion} />
+        </Wrapper>
+    );
 }

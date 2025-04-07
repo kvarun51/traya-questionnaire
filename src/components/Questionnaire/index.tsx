@@ -3,17 +3,16 @@
 import { useState } from 'react';
 import { Question } from '@/lib/useCurrentQuestion';
 import FileUpload from './FileUpload';
-import TelInput from './TelInput';
 import TextInput from './TextInput';
 import SingleChoice from './SingleChoice';
-import MultipleChoice from './MultipleChoice';
-import { getNextQuestion } from '@/lib/session'; // import the function
+import MultipleChoice from './MultipleChoice';// import the function
 
 type Props = {
   question: Question;
+  getNextQuestion: () => Question | null;
 };
 
-export default function Questionnaire({ question }: Props) {
+export default function Questionnaire({ question, getNextQuestion }: Props) {
   const [currentQuestion, setCurrentQuestion] = useState<Question>(question);
 
   const onNext = () => {

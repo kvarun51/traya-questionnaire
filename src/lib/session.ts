@@ -69,33 +69,33 @@ export function setQuestionProgress(questionId: string, answer: string | string[
   }));
 }
 
-export function getNextQuestion() {
-  const { session } = initializeOrGetSession();
-  const progress = session.question_progress;
+// export function getNextQuestion() {
+//   const { session } = initializeOrGetSession();
+//   const progress = session.question_progress;
   
-  const lastAnsweredId = progress.length ? progress[progress.length - 1].questionId : null;
-  const keys = Object.keys(questionnaire);
+//   const lastAnsweredId = progress.length ? progress[progress.length - 1].questionId : null;
+//   const keys = Object.keys(questionnaire);
 
-  // If no question has been answered yet, return the first
-  if (!lastAnsweredId) {
-    const firstKey = keys[0];
-    const firstQuestion = (questionnaire as unknown as QuestionnaireType)[firstKey];
+//   // If no question has been answered yet, return the first
+//   if (!lastAnsweredId) {
+//     const firstKey = keys[0];
+//     const firstQuestion = (questionnaire as unknown as QuestionnaireType)[firstKey];
 
-    // Save it with empty answer
-    setQuestionProgress(firstQuestion.id, '');
-    return firstQuestion;
-  }
+//     // Save it with empty answer
+//     setQuestionProgress(firstQuestion.id, '');
+//     return firstQuestion;
+//   }
 
-  const currentIndex = keys.findIndex((key) => key === lastAnsweredId);
-  const nextKey = keys[currentIndex + 1];
+//   const currentIndex = keys.findIndex((key) => key === lastAnsweredId);
+//   const nextKey = keys[currentIndex + 1];
 
-  if (nextKey) {
-    const nextQuestion = (questionnaire as unknown as QuestionnaireType)[nextKey];
+//   if (nextKey) {
+//     const nextQuestion = (questionnaire as unknown as QuestionnaireType)[nextKey];
 
-    // Save next question with empty answer
-    setQuestionProgress(nextQuestion.id, '');
-    return nextQuestion;
-  }
+//     // Save next question with empty answer
+//     setQuestionProgress(nextQuestion.id, '');
+//     return nextQuestion;
+//   }
 
-  return null; // No more questions
-}
+//   return null; // No more questions
+// }

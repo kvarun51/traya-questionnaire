@@ -1,30 +1,28 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import { Button } from 'antd';
+import { setQuestionProgress } from '@/lib/session'; // adjust path if needed
 
-export default function FileUploadCapture({ onNext }: { onNext?: () => void }) {
+type FileUploadCaptureProps = {
+  questionId: string;
+  onNext?: () => void;
+};
+
+export default function FileUploadCapture({ questionId, onNext }: FileUploadCaptureProps) {
   const webcamRef = useRef<Webcam>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
   const videoConstraints = {
-    facingMode: 'environment', // Use 'user' for front cam
+    facingMode: 'environment',
   };
-
-  useEffect(() => {
-    // Load from localStorage if available
-    const storedImage = localStorage.getItem('capturedImage');
-    if (storedImage) {
-      setPreview(storedImage);
-    }
-  }, []);
 
   const capturePhoto = () => {
     const imageSrc = webcamRef.current?.getScreenshot();
     if (imageSrc) {
       setPreview(imageSrc);
-      localStorage.setItem('capturedImage', imageSrc);
+      setQuestionProgress(questionId, imageSrc);
     }
   };
 
