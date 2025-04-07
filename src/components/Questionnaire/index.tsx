@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { Question } from '@/lib/useCurrentQuestion';
 import FileUpload from './FileUpload';
 import TextInput from './TextInput';
@@ -14,37 +13,31 @@ type Props = {
 };
 
 export default function Questionnaire({ question, getNextQuestion, getPreviousQuestion }: Props) {
-  // const [currentQuestion, setCurrentQuestion] = useState<Question>(question);
-let currentQuestion = question;
+
   const onNext = () => {
     const next = getNextQuestion();
-    if (next) {
-      setCurrentQuestion(next); // update UI if client side only
-      // OR if using routing: router.push(`/questionnaire/${next.id}`)
-    } else {
+    if (!next)
       console.log('🎉 No more questions');
-      // Redirect to summary page or thank you screen
-    }
   };
 
   const renderQuestionComponent = () => {
-    switch (currentQuestion.type) {
+    switch (question.type) {
       case 'multiple_choice':
-        return <MultipleChoice key={question.id} question={currentQuestion} onNext={onNext} />;
+        return <MultipleChoice key={question.id} question={question} onNext={onNext} />;
       case 'single_choice':
-        return <SingleChoice key={question.id} question={currentQuestion} onNext={onNext} onPrev={getPreviousQuestion} />;
+        return <SingleChoice key={question.id} question={question} onNext={onNext} onPrev={getPreviousQuestion} />;
       case 'file':
-        return <FileUpload key={question.id} question={currentQuestion} onNext={onNext} />;
+        return <FileUpload key={question.id} question={question} onNext={onNext} />;
       case 'text':
-        return <TextInput key={question.id} question={currentQuestion} onNext={onNext} onPrev={getPreviousQuestion} />;
+        return <TextInput key={question.id} question={question} onNext={onNext} onPrev={getPreviousQuestion} />;
       default:
-        return <p>Unsupported question type: {currentQuestion.type}</p>;
+        return <p>Unsupported question type: {question.type}</p>;
     }
   };
 
   return (
     <div>
-      <h2>{currentQuestion.text}</h2>
+      <h2>{question.text}</h2>
       {renderQuestionComponent()}
     </div>
   );
