@@ -23,7 +23,7 @@ export default function Questionnaire({ question, getNextQuestion, getPreviousQu
   const renderQuestionComponent = () => {
     switch (question.type) {
       case 'multiple_choice':
-        return <MultipleChoice key={question.id} question={question} onNext={onNext} />;
+        return <MultipleChoice key={question.id} question={question} onNext={onNext} onPrev={getPreviousQuestion} />;
       case 'single_choice':
         return <SingleChoice key={question.id} question={question} onNext={onNext} onPrev={getPreviousQuestion} />;
       case 'file':
