@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 
 export default function QuestionnairePage() {
   const currentQuestion = useCurrentQuestion();
-
+console.log(currentQuestion)
   if (!currentQuestion) {
     return (
       <Wrapper>

@@ -20,7 +20,7 @@
         "tag": "user",
         "text": "Phone Number",
         "hindi_text": "Phone Number",
-        "type": "tel"
+        "type": "text"
     },
     "email": {
         "id": "email",
@@ -42,7 +42,7 @@
         "tag": "form",
         "text": "How old are you?",
         "hindi_text": "Aapki umar kya hai?",
-        "type": "tel"
+        "type": "text"
     },
     "gender": {
         "id": "gender",

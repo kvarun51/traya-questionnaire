@@ -1,37 +1,50 @@
 'use client';
 
+import { useState } from 'react';
 import { Question } from '@/lib/useCurrentQuestion';
 import FileUpload from './FileUpload';
 import TelInput from './TelInput';
 import TextInput from './TextInput';
 import SingleChoice from './SingleChoice';
 import MultipleChoice from './MultipleChoice';
+import { getNextQuestion } from '@/lib/session'; // import the function
 
 type Props = {
   question: Question;
 };
 
 export default function Questionnaire({ question }: Props) {
+  const [currentQuestion, setCurrentQuestion] = useState<Question>(question);
+
+  const onNext = () => {
+    const next = getNextQuestion();
+    if (next) {
+      setCurrentQuestion(next); // update UI if client side only
+      // OR if using routing: router.push(`/questionnaire/${next.id}`)
+    } else {
+      console.log('🎉 No more questions');
+      // Redirect to summary page or thank you screen
+    }
+  };
+
   const renderQuestionComponent = () => {
-    switch (question.type) {
+    switch (currentQuestion.type) {
       case 'multiple_choice':
-        return <MultipleChoice question={question} />;
+        return <MultipleChoice key={question.id} question={currentQuestion} onNext={onNext} />;
       case 'single_choice':
-        return <SingleChoice question={question} />;
+        return <SingleChoice key={question.id} question={currentQuestion} onNext={onNext} />;
       case 'file':
-        return <FileUpload question={question} />;
-      case 'tel':
-        return <TelInput question={question} />;
+        return <FileUpload key={question.id} question={currentQuestion} onNext={onNext} />;
       case 'text':
-        return <TextInput question={question} />;
+        return <TextInput key={question.id} question={currentQuestion} onNext={onNext} />;
       default:
-        return <p>Unsupported question type: {question.type}</p>;
+        return <p>Unsupported question type: {currentQuestion.type}</p>;
     }
   };
 
   return (
     <div>
-      <h2>{question.text}</h2>
+      <h2>{currentQuestion.text}</h2>
       {renderQuestionComponent()}
     </div>
   );
