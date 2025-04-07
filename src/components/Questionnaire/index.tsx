@@ -10,11 +10,12 @@ import MultipleChoice from './MultipleChoice';// import the function
 type Props = {
   question: Question;
   getNextQuestion: () => Question | null;
+  getPreviousQuestion: () => Question | null;
 };
 
-export default function Questionnaire({ question, getNextQuestion }: Props) {
-  const [currentQuestion, setCurrentQuestion] = useState<Question>(question);
-
+export default function Questionnaire({ question, getNextQuestion, getPreviousQuestion }: Props) {
+  // const [currentQuestion, setCurrentQuestion] = useState<Question>(question);
+let currentQuestion = question;
   const onNext = () => {
     const next = getNextQuestion();
     if (next) {
@@ -31,11 +32,11 @@ export default function Questionnaire({ question, getNextQuestion }: Props) {
       case 'multiple_choice':
         return <MultipleChoice key={question.id} question={currentQuestion} onNext={onNext} />;
       case 'single_choice':
-        return <SingleChoice key={question.id} question={currentQuestion} onNext={onNext} />;
+        return <SingleChoice key={question.id} question={currentQuestion} onNext={onNext} onPrev={getPreviousQuestion} />;
       case 'file':
         return <FileUpload key={question.id} question={currentQuestion} onNext={onNext} />;
       case 'text':
-        return <TextInput key={question.id} question={currentQuestion} onNext={onNext} />;
+        return <TextInput key={question.id} question={currentQuestion} onNext={onNext} onPrev={getPreviousQuestion} />;
       default:
         return <p>Unsupported question type: {currentQuestion.type}</p>;
     }

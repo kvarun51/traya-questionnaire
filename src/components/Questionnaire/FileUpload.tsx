@@ -4,13 +4,14 @@ import { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import { Button } from 'antd';
 import { setQuestionProgress } from '@/lib/session'; // adjust path if needed
+import { Question } from '@/lib/useCurrentQuestion';
 
 type FileUploadCaptureProps = {
-  questionId: string;
+  question: Question;
   onNext?: () => void;
 };
 
-export default function FileUploadCapture({ questionId, onNext }: FileUploadCaptureProps) {
+export default function FileUploadCapture({ question, onNext }: FileUploadCaptureProps) {
   const webcamRef = useRef<Webcam>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -22,7 +23,7 @@ export default function FileUploadCapture({ questionId, onNext }: FileUploadCapt
     const imageSrc = webcamRef.current?.getScreenshot();
     if (imageSrc) {
       setPreview(imageSrc);
-      setQuestionProgress(questionId, imageSrc);
+      setQuestionProgress(question.id, imageSrc);
     }
   };
 

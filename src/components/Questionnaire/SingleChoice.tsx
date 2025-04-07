@@ -1,16 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { Radio, Button } from 'antd';
+import { Radio, Button, Space } from 'antd';
 import type { Question } from '@/lib/useCurrentQuestion';
 import { setQuestionProgress } from '@/lib/session';
 
 type Props = {
   question: Question;
   onNext?: () => void;
+  onPrev?: () => void;
 };
 
-export default function SingleChoice({ question, onNext }: Props) {
+export default function SingleChoice({ question, onNext, onPrev }: Props) {
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
   const handleChange = (e: any) => {
@@ -32,20 +33,21 @@ export default function SingleChoice({ question, onNext }: Props) {
         ))}
       </Radio.Group>
 
-      {/* Optional manual submit */}
-      {/* <Button
-        type="primary"
-        onClick={() => {
-          if (selectedValue) {
-            setQuestionProgress(question.id, selectedValue);
-            if (onNext) onNext();
-          }
-        }}
-        style={{ marginTop: 12 }}
-        disabled={!selectedValue}
-      >
-        Submit
-      </Button> */}
+      <Space style={{ marginTop: 12 }}>
+        {!question.first_question && <Button onClick={onPrev}>Prev</Button>}
+        <Button
+          type="primary"
+          onClick={() => {
+            if (selectedValue) {
+              setQuestionProgress(question.id, selectedValue);
+              if (onNext) onNext();
+            }
+          }}
+          disabled={!selectedValue}
+        >
+          Submit
+        </Button>
+      </Space>
     </div>
   );
 }

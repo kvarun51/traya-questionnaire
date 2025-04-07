@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 `;
 
 export default function QuestionnairePage() {
-    const {currentQuestion, getNextQuestion} = useCurrentQuestion();
+    const {currentQuestion, getNextQuestion, getPreviousQuestion} = useCurrentQuestion();
     console.log(currentQuestion)
     if (!currentQuestion) {
         return (
@@ -26,7 +26,7 @@ export default function QuestionnairePage() {
 
     return (
         <Wrapper>
-            <Questionnaire question={currentQuestion} getNextQuestion={getNextQuestion} />
+            <Questionnaire question={currentQuestion} getNextQuestion={getNextQuestion} getPreviousQuestion={getPreviousQuestion} />
         </Wrapper>
     );
 }

@@ -18,40 +18,37 @@ type ProgressItem = {
 export function useCurrentQuestion() {
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
 
-  // Helper: find the next question after a given questionId
+  const keys = Object.keys(questionnaire);
+
   const findNextQuestion = (questionId: string | null): Question | null => {
-    const keys = Object.keys(questionnaire);
-    if (!questionId) return (questionnaire as Record<string, Question>)[keys[0]];
+    if (!questionId) {
+      const firstKey = keys[0];
+      return { ...(questionnaire as Record<string, Question>)[firstKey], first_question: true }; // ✅ added
+    }
 
     const currentIndex = keys.findIndex((key) => key === questionId);
     const nextKey = keys[currentIndex + 1];
     return nextKey ? (questionnaire as Record<string, Question>)[nextKey] : null;
   };
 
-  // Loads the current question based on session
   const loadCurrentQuestion = () => {
     try {
       const sessionData = localStorage.getItem('traya_session');
       if (!sessionData) return;
-  
+
       const parsed = JSON.parse(sessionData);
       const progress: ProgressItem[] = parsed.question_progress || [];
-  
+
       let question;
-  
+
       if (progress.length === 0) {
-        // First question
-        const firstKey = Object.keys(questionnaire)[0];
-        question = (questionnaire as Record<string, Question>)[firstKey];
+        const firstKey = keys[0];
+        question = { ...(questionnaire as Record<string, Question>)[firstKey], first_question: true }; // ✅ already present
       } else {
         const last = progress[progress.length - 1];
-        if (last.answer === '' || last.answer == null) {
-          question = (questionnaire as Record<string, Question>)[last.questionId];
-        } else {
-          question = findNextQuestion(last.questionId);
-        }
+        question = (questionnaire as Record<string, Question>)[last.questionId];
       }
-  
+
       if (question) {
         setCurrentQuestion({ ...question });
       }
@@ -60,7 +57,6 @@ export function useCurrentQuestion() {
     }
   };
 
-  // Called manually to fetch and update to next question
   const getNextQuestion = (): Question | null => {
     if (!currentQuestion) return null;
 
@@ -72,6 +68,32 @@ export function useCurrentQuestion() {
     return next;
   };
 
+  const getPreviousQuestion = (): Question | null => {
+    try {
+      const sessionData = localStorage.getItem('traya_session');
+      if (!sessionData || !currentQuestion) return null;
+
+      const parsed = JSON.parse(sessionData);
+      let progress: ProgressItem[] = parsed.question_progress || [];
+
+      if (progress.length <= 1) return null; // No previous question
+
+      const previousItem = progress[progress.length - 2];
+      progress = progress.slice(0, progress.length - 1); // Remove current
+
+      parsed.question_progress = progress;
+      localStorage.setItem('traya_session', JSON.stringify(parsed));
+
+      const isFirst = previousItem.questionId === keys[0]; // ✅ added
+      const previous = (questionnaire as Record<string, Question>)[previousItem.questionId];
+      setCurrentQuestion({ ...previous, ...(isFirst && { first_question: true }) }); // ✅ modified
+      return { ...previous, ...(isFirst && { first_question: true }) }; // ✅ return updated
+    } catch (err) {
+      console.error('Failed to get previous question', err);
+      return null;
+    }
+  };
+
   useEffect(() => {
     loadCurrentQuestion();
   }, []);
@@ -79,5 +101,6 @@ export function useCurrentQuestion() {
   return {
     currentQuestion,
     getNextQuestion,
+    getPreviousQuestion,
   };
 }
