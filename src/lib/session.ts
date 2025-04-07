@@ -9,34 +9,52 @@ export function initializeOrGetSession(): {
   session: TrayaSession;
   hasProgress: boolean;
 } {
-  let sessionDataRaw = localStorage.getItem('traya_session');
-  let session: TrayaSession;
-
-  if (!sessionDataRaw) {
-    session = {
-      session_id: uuidv4(),
-      question_progress: [],
-    };
-    localStorage.setItem('traya_session', JSON.stringify(session));
-    return { session, hasProgress: false };
-  }
+  let session: TrayaSession | null = null;
 
   try {
-    session = JSON.parse(sessionDataRaw);
-    if (!session.session_id) {
-      session.session_id = uuidv4();
+    const raw = localStorage.getItem('traya_session');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      session = {
+        session_id: parsed.session_id || uuidv4(),
+        question_progress: Array.isArray(parsed.question_progress) ? parsed.question_progress : [],
+      };
     }
-    if (!Array.isArray(session.question_progress)) {
-      session.question_progress = [];
-    }
-    localStorage.setItem('traya_session', JSON.stringify(session));
-    return { session, hasProgress: session.question_progress.length > 0 };
   } catch {
+    // Ignore parse error and fallback to new session
+  }
+
+  // Only create a new session if we couldn't retrieve or parse an existing one
+  if (!session) {
     session = {
       session_id: uuidv4(),
       question_progress: [],
     };
-    localStorage.setItem('traya_session', JSON.stringify(session));
-    return { session, hasProgress: false };
   }
+
+  const hasProgress = session.question_progress.length > 0;
+  localStorage.setItem('traya_session', JSON.stringify(session));
+  return { session, hasProgress };
 }
+
+export function setQuestionProgress(questionId: string, answer: string) {
+  const { session } = initializeOrGetSession();
+  const progress = session.question_progress;
+
+  const index = progress.findIndex((item: any) => item.questionId === questionId);
+
+  if (index !== -1) {
+    // Update existing
+    progress[index].answer = answer;
+  } else {
+    // Add new
+    progress.push({ questionId, answer });
+  }
+
+  localStorage.setItem('traya_session', JSON.stringify({
+    ...session,
+    question_progress: progress,
+  }));
+}
+
+

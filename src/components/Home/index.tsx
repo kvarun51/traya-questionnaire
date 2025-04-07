@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Spin } from 'antd';
 import styled from 'styled-components';
-import router from 'next/router';
-import { getQuestions } from '@/lib/getQuestions';
+import { useRouter } from 'next/navigation';
 import { initializeOrGetSession } from '@/lib/session';
 
 const Wrapper = styled.main`
@@ -23,7 +22,7 @@ const Title = styled.h1`
 
 function HomePageContent() {
   const [hasProgress, setHasProgress] = useState<boolean | null>(null);
-
+  const router = useRouter();
   useEffect(() => {
     const { hasProgress } = initializeOrGetSession();
     setHasProgress(hasProgress);
@@ -38,8 +37,7 @@ function HomePageContent() {
   }
 
   const clickHandler = async () => {
-    console.log(await getQuestions());
-    // router.push('/questionnaire');
+    router.push('/questionnaire');
   };
 
   return (
